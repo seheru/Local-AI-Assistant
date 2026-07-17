@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI Asistan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = { darkMode: 'class' }
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function toggleChat() { document.getElementById('ai-chat-panel').classList.toggle('hidden'); }
+        // YENİ: Profil penceresini açıp kapatan fonksiyon
+        function toggleProfileModal() { document.getElementById('profile-modal').classList.toggle('hidden'); }
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-screen p-4 flex gap-4 font-sans transition-colors duration-300 overflow-hidden">
+
+    <!-- SOL MENÜ -->
+    <div class="w-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col items-center py-6 gap-8 z-10 flex-shrink-0 h-full">
+        <button class="text-pink-500 text-2xl hover:scale-110 transition" title="Sağlık"><i class="fa-solid fa-heart"></i></button>
+        <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl transition" title="Odaklanma"><i class="fa-solid fa-bullseye"></i></button>
+        <div class="flex-grow"></div> 
+        <button onclick="toggleTheme()" class="text-gray-400 hover:text-yellow-400 text-xl transition" title="Tema Değiştir"><i class="fa-solid fa-moon"></i></button>
+    </div>
+
+    <!-- ANA İÇERİK ALANI -->
+    <div class="flex-grow flex gap-4 h-full">
+        
+        <!-- SOL KOLON -->
+        <div class="w-[520px] flex flex-col gap-4 flex-shrink-0 h-full">
+            
+            <!-- 1. Kişisel Bilgiler (DÜZENLE BUTONUNA İŞLEV EKLENDİ) -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg relative flex-shrink-0">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="font-bold text-md">Kişisel Bilgiler</h2>
+                    <!-- Tıklandığında toggleProfileModal() çalışır -->
+                    <button onclick="toggleProfileModal()" class="text-blue-500 hover:text-blue-600 transition text-sm font-bold bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-lg" title="AI Hafızasını Gör/Düzenle">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> Düzenle
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-2">
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-venus-mars w-4 text-gray-400"></i> Cinsiyet: <span class="text-gray-800 dark:text-gray-200 font-medium">Kadın</span></div>
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-weight-scale w-4 text-gray-400"></i> Kilo: <span class="text-gray-800 dark:text-gray-200 font-medium">VKİ 20.0</span></div>
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-calendar w-4 text-gray-400"></i> Yaş: <span class="italic text-gray-400">Giriniz</span></div>
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-ruler-vertical w-4 text-gray-400"></i> Boy: <span class="text-gray-800 dark:text-gray-200 font-medium">Uzun Uzuv</span></div>
+                </div>
+            </div>
+
+            <!-- 2. Eats (Beslenme) Kartı -->
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg relative flex flex-col gap-3 flex-grow">
+                <div class="flex justify-between items-center flex-shrink-0">
+                    <h2 class="font-bold text-lg text-blue-500"><i class="fa-solid fa-utensils mr-2"></i>Beslenme</h2>
+                    <button class="text-gray-400 hover:text-white transition" title="Tam Ekran Yap"><i class="fa-solid fa-expand"></i></button>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-2 flex flex-col gap-2 flex-grow overflow-y-auto border border-gray-100 dark:border-gray-700">
+                    <div class="flex justify-between items-center group">
+                        <span class="text-sm text-gray-700 dark:text-gray-300 truncate pr-2">2 haşlanmış yumurta, 3 dilim beyaz peynir...</span>
+                        <button class="text-gray-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100"><i class="fa-solid fa-circle-minus"></i></button>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2 flex-shrink-0">
+                    <div class="relative mt-1">
+                        <input type="text" placeholder="Yediklerini ekle..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 text-sm focus:outline-none focus:border-blue-500 transition">
+                        <button class="absolute right-2 top-1.5 text-blue-500 hover:text-blue-600 text-lg"><i class="fa-solid fa-circle-plus"></i></button>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-3 text-xs">
+                        <div class="flex flex-col items-center"><span class="text-gray-500">Protein</span><span class="mt-1"><b class="text-red-500 text-sm">45g</b> / 150g</span></div>
+                        <div class="flex flex-col items-center"><span class="text-gray-500">Karb.</span><span class="mt-1"><b class="text-green-500 text-sm">180g</b> / 200g</span></div>
+                        <div class="flex flex-col items-center"><span class="text-gray-500">Yağ</span><span class="mt-1"><b class="text-red-700 dark:text-red-400 text-sm">90g</b> / 60g</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uyku ve Döngü Kartları -->
+            <div class="flex gap-4 flex-shrink-0">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg flex-1 relative">
+                    <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition text-xs"><i class="fa-solid fa-expand"></i></button>
+                    <h2 class="font-bold text-md text-indigo-500 mb-3"><i class="fa-solid fa-moon mr-2"></i>Uyku</h2>
+                    <ul class="text-xs text-gray-600 dark:text-gray-400 space-y-2">
+                        <li class="flex justify-between"><span>Yatış:</span> <b class="text-gray-800 dark:text-gray-200">23:30</b></li>
+                        <li class="flex justify-between"><span>Kalkış:</span> <b class="text-gray-800 dark:text-gray-200">07:30</b></li>
+                        <li class="flex justify-between border-t border-gray-100 dark:border-gray-700 pt-1 mt-1"><span>Toplam:</span> <b class="text-gray-800 dark:text-gray-200">8s 00dk</b></li>
+                        <li class="flex justify-between text-red-400 mt-1"><span>Uyanma:</span> <b>2 Kez</b></li>
+                    </ul>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg flex-1 relative flex flex-col items-center justify-center">
+                    <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition text-xs z-20"><i class="fa-solid fa-expand"></i></button>
+                    <h2 class="font-bold text-md text-red-500 w-full mb-2"><i class="fa-solid fa-droplet mr-2"></i>Döngü</h2>
+                    <div class="relative w-40 h-40 mt-1">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" fill="none" class="stroke-gray-200 dark:stroke-gray-700" stroke-width="8" />
+                            <circle cx="50" cy="50" r="42" fill="none" class="stroke-red-500" stroke-width="8" stroke-dasharray="45 264" stroke-dashoffset="0" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="42" fill="none" class="stroke-cyan-600" stroke-width="8" stroke-dasharray="55 264" stroke-dashoffset="-100" stroke-linecap="round"/>
+                        </svg>
+                        <div class="absolute bottom-1 left-0 bg-green-600 text-white rounded-full w-10 h-10 flex flex-col items-center justify-center border-[3px] border-white dark:border-gray-800 shadow-md transform -rotate-12 z-10">
+                            <span class="text-[8px] font-bold uppercase leading-none">Day</span><span class="text-sm font-bold leading-none">20</span>
+                        </div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                            <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">7 Days to PMS</span>
+                            <span class="text-2xl font-black text-gray-800 dark:text-gray-200 leading-tight my-0.5">NOV 29</span>
+                            <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Next PMS <br> Dec 6</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAĞ KOLON (Gelişim & Spor Planı) -->
+        <div class="flex-grow bg-white dark:bg-gray-800 p-0 rounded-2xl shadow-lg flex flex-col min-w-[400px] h-full overflow-hidden border border-gray-100 dark:border-gray-700">
+            <div class="bg-gray-50 dark:bg-gray-900/50 p-5 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
+                <div>
+                    <h2 class="font-bold text-xl"><i class="fa-solid fa-bolt text-yellow-500 mr-2"></i>Bugünün Planı: Güç Antrenmanı</h2>
+                    <p class="text-sm text-gray-500 mt-1">Çarşamba • Tahmini Süre: 40 dk</p>
+                </div>
+                <button class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full font-bold shadow-md transition transform hover:scale-105">
+                    Başlat <i class="fa-solid fa-play ml-1"></i>
+                </button>
+            </div>
+            <div class="flex-grow overflow-y-auto p-5 flex flex-col gap-5">
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-triangle-exclamation text-yellow-600 dark:text-yellow-500"></i>
+                        <h3 class="font-bold text-yellow-800 dark:text-yellow-400 text-sm">Dr. AI Asistan Uyarıları</h3>
+                    </div>
+                    <ul class="text-xs text-yellow-700 dark:text-yellow-300 space-y-2 list-disc list-inside">
+                        <li><b>Döngü (Day 20):</b> Luteal Faz/PMS dönemindesin. Yeni rekor deneme, dinlenme sürelerini uzat (3 dk).</li>
+                        <li><b>Tansiyon:</b> Antrenmana başlamadan 1 bardak tuzlu suyunu içmeyi unutma.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 border-b border-gray-100 dark:border-gray-700 pb-1 text-sm uppercase tracking-wider">Isınma (5 Dakika)</h3>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <label class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg cursor-pointer"><input type="checkbox" class="w-4 h-4 text-pink-500 rounded"><span class="text-gray-600 dark:text-gray-300">Boyun & Omuz Çevirme</span></label>
+                        <label class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg cursor-pointer"><input type="checkbox" class="w-4 h-4 text-pink-500 rounded"><span class="text-gray-600 dark:text-gray-300 font-bold text-pink-600">Bilekleri Çevir (Önemli!)</span></label>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 border-b border-gray-100 dark:border-gray-700 pb-1 text-sm uppercase tracking-wider">Ana Antrenman</h3>
+                    <div class="space-y-3">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                            <input type="checkbox" class="w-5 h-5 mt-1 text-blue-500 rounded cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center mb-1">
+                                    <h4 class="font-bold text-gray-800 dark:text-gray-200">1. Eğimli Şınav (Incline)</h4>
+                                    <span class="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 text-xs font-bold px-2 py-1 rounded">3 Set x 10 Tekrar</span>
+                                </div>
+                                <div class="text-[11px] text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20 inline-block px-2 py-1 rounded mt-1">
+                                    <i class="fa-solid fa-circle-info mr-1"></i> Bilek koruması için <b>yumruk üstünde</b> yap.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-4 shadow-sm flex items-start gap-4 opacity-75">
+                            <input type="checkbox" class="w-5 h-5 mt-1 text-gray-400 rounded cursor-pointer" disabled>
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center mb-1">
+                                    <h4 class="font-bold text-gray-500 dark:text-gray-400 line-through">2. Sandalye Squat</h4>
+                                    <span class="bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400 text-xs font-bold px-2 py-1 rounded">Geçildi</span>
+                                </div>
+                                <div class="text-[11px] text-orange-600 dark:text-orange-400 mt-1"><i class="fa-solid fa-lock mr-1"></i> Bacaklarındaki DOMS geçene kadar pasif.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                <!-- ========================================== -->
+                <!-- YENİ EKLENEN KISIM: GRAFİKLER VE HAFTALIK CHECK-IN -->
+                <!-- ========================================== -->
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-800 dark:text-gray-200"><i class="fa-solid fa-chart-line text-green-500 mr-2"></i>Gelişim Analizi</h3>
+                            <p class="text-xs text-gray-500 mt-1">AI tarafından hazırlanan son 4 haftalık raporun.</p>
+                        </div>
+                        <!-- Haftalık Check-in Butonu -->
+                        <button class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-comment-medical"></i> Haftalık Durum Bildir
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        
+                        <!-- 1. GRAFİK: Güç ve Kondisyon Seviyesi (Çizgi Grafik) -->
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-sm text-gray-700 dark:text-gray-300 mb-4 text-center">Güç ve Kondisyon Eğrisi</h4>
+                            
+                            <!-- Custom SVG Line Chart -->
+                            <div class="relative h-24 w-full">
+                                <svg viewBox="0 0 100 50" class="w-full h-full overflow-visible">
+                                    <!-- Arka plan çizgileri -->
+                                    <line x1="0" y1="12.5" x2="100" y2="12.5" stroke="currentColor" class="text-gray-200 dark:text-gray-700" stroke-width="0.5" stroke-dasharray="2"/>
+                                    <line x1="0" y1="25" x2="100" y2="25" stroke="currentColor" class="text-gray-200 dark:text-gray-700" stroke-width="0.5" stroke-dasharray="2"/>
+                                    <line x1="0" y1="37.5" x2="100" y2="37.5" stroke="currentColor" class="text-gray-200 dark:text-gray-700" stroke-width="0.5" stroke-dasharray="2"/>
+                                    
+                                    <!-- Güç Çizgisi (Pembe) -->
+                                    <polyline points="0,40 33,35 66,20 100,10" fill="none" class="stroke-pink-500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <!-- Noktalar -->
+                                    <circle cx="0" cy="40" r="2" class="fill-pink-500"/>
+                                    <circle cx="33" cy="35" r="2" class="fill-pink-500"/>
+                                    <circle cx="66" cy="20" r="2" class="fill-pink-500"/>
+                                    <circle cx="100" cy="10" r="2" class="fill-pink-500"/>
+                                    
+                                    <!-- Kondisyon Çizgisi (Mavi) -->
+                                    <polyline points="0,45 33,40 66,35 100,25" fill="none" class="stroke-blue-500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <!-- Noktalar -->
+                                    <circle cx="0" cy="45" r="2" class="fill-blue-500"/>
+                                    <circle cx="33" cy="40" r="2" class="fill-blue-500"/>
+                                    <circle cx="66" cy="35" r="2" class="fill-blue-500"/>
+                                    <circle cx="100" cy="25" r="2" class="fill-blue-500"/>
+                                </svg>
+                            </div>
+                            
+                            <!-- Gösterge (Legend) -->
+                            <div class="flex justify-center gap-4 mt-3 text-[10px] text-gray-500">
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-pink-500"></span> Güç (Şınav/Çekiş)</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Kondisyon (HIIT)</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. GRAFİK: Antrenman Planına Sadakat (Sütun Grafik) -->
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-4 rounded-xl shadow-sm flex flex-col">
+                            <h4 class="font-bold text-sm text-gray-700 dark:text-gray-300 mb-4 text-center">Plana Sadakat (% Uyum)</h4>
+                            
+                            <!-- Custom Flex Bar Chart -->
+                            <div class="flex-grow flex items-end justify-between gap-2 h-24 mt-auto">
+                                <!-- Hafta 1 -->
+                                <div class="w-full flex flex-col items-center group">
+                                    <span class="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition mb-1">%60</span>
+                                    <div class="w-full bg-green-400 dark:bg-green-500 rounded-t-sm h-[60%] transition-all hover:bg-green-500"></div>
+                                    <span class="text-[10px] text-gray-500 mt-2">Hafta 1</span>
+                                </div>
+                                <!-- Hafta 2 -->
+                                <div class="w-full flex flex-col items-center group">
+                                    <span class="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition mb-1">%40</span>
+                                    <div class="w-full bg-yellow-400 dark:bg-yellow-500 rounded-t-sm h-[40%] transition-all hover:bg-yellow-500"></div>
+                                    <span class="text-[10px] text-gray-500 mt-2">Hafta 2</span>
+                                </div>
+                                <!-- Hafta 3 -->
+                                <div class="w-full flex flex-col items-center group">
+                                    <span class="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition mb-1">%100</span>
+                                    <div class="w-full bg-green-500 dark:bg-green-600 rounded-t-sm h-[100%] transition-all hover:bg-green-600"></div>
+                                    <span class="text-[10px] text-gray-500 mt-2">Hafta 3</span>
+                                </div>
+                                <!-- Hafta 4 (Bu hafta) -->
+                                <div class="w-full flex flex-col items-center group relative">
+                                    <span class="absolute -top-5 bg-pink-100 text-pink-600 dark:bg-pink-900/50 dark:text-pink-300 px-1 rounded text-[9px] font-bold">Harika!</span>
+                                    <span class="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition mb-1">%90</span>
+                                    <div class="w-full bg-green-400 dark:bg-green-500 rounded-t-sm h-[90%] transition-all hover:bg-green-500"></div>
+                                    <span class="text-[10px] font-bold text-gray-800 dark:text-gray-200 mt-2">Bu Hafta</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- AI SOHBET PENCERESİ VE BUTONU -->
+    <div id="ai-chat-panel" class="hidden fixed bottom-24 right-8 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden transition-all z-50">
+        <div class="bg-gradient-to-r from-pink-500 to-purple-500 text-white p-4 flex justify-between items-center">
+            <span class="font-bold drop-shadow-md"><i class="fa-solid fa-user-doctor mr-2"></i>Dr. AI Asistan</span>
+            <button onclick="toggleChat()" class="hover:text-gray-200 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="h-80 p-4 overflow-y-auto flex flex-col gap-3 bg-gray-50 dark:bg-gray-900 text-sm">
+            <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl rounded-tl-none self-start max-w-[85%] shadow-sm">Harika bir antrenman programı çıkardık! Tuzlu suyunu içmeyi unutmadın değil mi?</div>
+        </div>
+        <div class="p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex gap-2 items-center">
+            <input type="text" placeholder="Asistana sor..." class="flex-grow bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-pink-500 transition">
+            <button class="bg-pink-500 hover:bg-pink-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+    <button onclick="toggleChat()" class="fixed bottom-8 right-8 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white w-14 h-14 rounded-full shadow-lg shadow-pink-500/40 flex items-center justify-center text-2xl transition hover:scale-110 z-50 border-2 border-white dark:border-gray-800">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+    </button>
+
+    <!-- ========================================== -->
+    <!-- YENİ: YAPAY ZEKA HAFIZASI (PROFİL DÜZENLEYİCİ) MODAL PENCERESİ -->
+    <!-- ========================================== -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-all duration-300">
+        <!-- Pencere İçeriği -->
+        <div class="bg-gray-50 dark:bg-gray-900 w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700">
+            
+            <!-- Modal Başlığı -->
+            <div class="bg-white dark:bg-gray-800 p-5 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <div>
+                    <h2 class="font-bold text-xl text-gray-800 dark:text-gray-200"><i class="fa-solid fa-brain text-purple-500 mr-2"></i>Yapay Zeka Hafıza Merkezi</h2>
+                    <p class="text-xs text-gray-500 mt-1">AI'ın senin hakkınnda topladığı tüm medikal ve fiziksel veriler. Gerektiğinde sil veya ekle.</p>
+                </div>
+                <button onclick="toggleProfileModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition bg-gray-100 dark:bg-gray-700 w-8 h-8 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Kaydırılabilir Veri Alanı -->
+            <div class="flex-grow overflow-y-auto p-6 space-y-8">
+
+                <!-- Tıbbi Durumlar (Hastalık / Sakatlık) -->
+                <div>
+                    <h3 class="font-bold text-lg text-red-500 border-b border-red-200 dark:border-red-900/50 pb-2 mb-4"><i class="fa-solid fa-notes-medical mr-2"></i>Kayıtlı Tıbbi Durumlar & Kısıtlamalar</h3>
+                    
+                    <div class="space-y-3">
+                        <!-- Madde 1 -->
+                        <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm group">
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-gray-200 text-sm">Kronik Düşük Tansiyon (Hipotansiyon)</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Yerden aniden kalkılan hareketlerde göz kararması. İlaç kullanmıyor, tuzlu su öneriliyor.</p>
+                            </div>
+                            <button class="text-gray-300 hover:text-red-500 transition px-2" title="Bu veriyi AI hafızasından sil"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <!-- Madde 2 -->
+                        <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm group">
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-gray-200 text-sm">Hafif Menisküs Aşınması (Dizler)</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Zıplamalı ve ağır squat hareketleri riskli.</p>
+                            </div>
+                            <button class="text-gray-300 hover:text-red-500 transition px-2"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <!-- Madde 3 -->
+                        <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm group">
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-gray-200 text-sm">Hassas El Bilekleri</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Açık avuç içi şınavlarda ağrı yapıyor. Yumruk üstü öneriliyor.</p>
+                            </div>
+                            <button class="text-gray-300 hover:text-red-500 transition px-2"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Yeni Tıbbi Durum Ekleme -->
+                    <div class="mt-3 flex gap-2">
+                        <input type="text" placeholder="Yeni bir sakatlık, alerji veya uyarı ekle..." class="flex-grow bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-red-500">
+                        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition"><i class="fa-solid fa-plus"></i> Ekle</button>
+                    </div>
+                </div>
+
+                <!-- Güncel Akut Durumlar (Geçici şeyler) -->
+                <div>
+                    <h3 class="font-bold text-lg text-orange-500 border-b border-orange-200 dark:border-orange-900/50 pb-2 mb-4"><i class="fa-solid fa-battery-half mr-2"></i>Mevcut / Geçici Durumlar</h3>
+                    <div class="flex justify-between items-center bg-orange-50 dark:bg-orange-900/20 p-3 rounded-xl border border-orange-200 dark:border-orange-800 shadow-sm group">
+                        <div>
+                            <h4 class="font-bold text-orange-800 dark:text-orange-400 text-sm">Bacaklarda Şiddetli Hamlık (DOMS)</h4>
+                            <p class="text-xs text-orange-600 dark:text-orange-500">Kilitlenme mevcut. Çözülene kadar bacak antrenmanı kilitli.</p>
+                        </div>
+                        <button class="text-orange-300 hover:text-orange-600 transition px-2 bg-white dark:bg-gray-800 px-3 py-1 rounded-lg text-xs font-bold border border-orange-200 dark:border-orange-700 shadow-sm">Geçti / İyileştim</button>
+                    </div>
+                </div>
+
+                <!-- Fiziksel Yapı & Hedefler -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-md text-blue-500 mb-3"><i class="fa-solid fa-dumbbell mr-2"></i>Antrenman Geçmişi</h3>
+                        <textarea class="w-full h-24 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500" placeholder="Örn: 2 yıl yoga, ara sıra HIIT kardiyo..."></textarea>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-md text-green-500 mb-3"><i class="fa-solid fa-bullseye mr-2"></i>Hedefler</h3>
+                        <textarea class="w-full h-24 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-green-500" placeholder="Örn: Kalisteniks ile fonksiyonel güç kazanmak..."></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Alt Kaydet Butonu -->
+            <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+                <button onclick="toggleProfileModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-bold px-4 py-2 transition">İptal</button>
+                <button onclick="toggleProfileModal()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-2 rounded-lg shadow-md transition">Değişiklikleri Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
